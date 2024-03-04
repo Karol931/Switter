@@ -8,6 +8,8 @@ from django.http import HttpResponse
 
 def login_user(request):
     if request.method == 'GET':
+        if request.user.is_authenticated:
+            return redirect('main_page')
         return render(request, 'login.html')
     elif request.method == 'POST':
         username = request.POST['username']

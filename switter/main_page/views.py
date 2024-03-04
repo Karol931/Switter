@@ -1,27 +1,24 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from observers.models import Observer
 from posts.models import Post
 from openai import OpenAI
 # Create your views here.
 
 def main_page(request):
     if request.user.is_authenticated:
-        username =request.user
-        posts = get_posts()
-        return render(request, 'main_page.html', {'username' : username, 'posts': posts})
+        user =request.user
+        posts = get_posts(user)
+        people_to_observe = get_people_to_observe(user)
+        return render(request, 'main_page.html', {'user' : user, 'posts': posts, 'people_to_observe': people_to_observe})
     
-def get_posts():
-    posts = Post.objects.all().order_by('-date_time')
+def get_posts(loged_in_user):
+    posts = Post.objects.exclude(user=loged_in_user).order_by('-date_time')
     return posts
 
-def check_post_sentiment(post_text):
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model='gpt-3.5-turbo',
-        message=[
-            {'role': 'system', 'content': 'You are a person who makes sentiment analysis of text, anwser with one of the folowing words: positive, neutral, negative.'},
-            {'role': 'user',
-             'content': post_text}
-        ]
-    )
-    print(response.choises[0].message)
+def get_people_to_observe(loged_in_user):
+    observers = Observer.objects.filter(observed_by=loged_in_user)
+    observers_ids = list(observers.values_list('observer', flat=True))
+    observers_ids.append(loged_in_user.id)
+    people_to_observe = User.objects.exclude(id__in=observers_ids).order_by('username')
+    return people_to_observe

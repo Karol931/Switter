@@ -9,17 +9,18 @@
 }
 
 .sidebar {
-    width: 200px;
     background-color: #f5f8fa;
     padding: 20px;
 }
 
 .right {
     border-left: #b9bcbe 1px solid;
+    width: 250px;
 }
 
 .left {
     border-right: #b9bcbe 1px solid;
+    width: 200px;
 }
 
 .nav-btn {
@@ -76,7 +77,8 @@
 }
 
 .new-post-form button:hover,
-.nav-btn:hover {
+.nav-btn:hover,
+.add-observer:hover {
     background-color: #ff5757;
 }
 
@@ -84,7 +86,7 @@
     margin-bottom: 10px;
 }
 
-.username {
+.post .username {
     display: inline;
     margin-right: 20px;
 }
@@ -114,4 +116,28 @@
 .error {
     background-color: #f2dede;
     color: #a94442;
+}
+
+.user-profile .username {
+    margin-bottom: 5px;
+}
+
+.user-profile {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border: solid 1px #ff8585;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-observer {
+    height: 40px;
+    width: 40px;
+    background-color: #ff8585;
+    color: white;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+    font-size: xx-large;
 }

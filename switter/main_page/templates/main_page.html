@@ -19,7 +19,7 @@
         </aside>
 
         <main class="main-content">
-            <h2 class="welcome-text">Welcome {{username}}</h2>
+            <h2 class="welcome-text">Welcome {{user.username}}</h2>
             <form method="post" action="{% url 'add_post' %}" class="new-post-form">
                 {% csrf_token %}
                 <textarea name="new-post" placeholder="What's happening?"></textarea>
@@ -40,7 +40,21 @@
         </main>
 
         <aside class="sidebar right">
-            <p>asdasd</p>
+            {% for p in people_to_observe %}
+            <div class="user-profile">
+                <div class="user-data">
+                    <b class="username">{{ p.username }}</b>
+                    <p class="name">{{ p.first_name }} {{ p.last_name }}</p>
+                </div>
+                <form action="{% url 'add_observer' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{p}}" />
+                    <button type="submit" class="add-observer">+</button>
+                </form>
+
+            </div>
+
+            {% endfor%}
         </aside>
     </div>
 </body>
