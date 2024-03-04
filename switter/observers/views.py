@@ -11,4 +11,9 @@ def add_observer(request):
     return redirect('main_page')
 
 def delete_observer(request):
-    return
+    if request.method == "POST":
+        observed_by = User.objects.get(username=request.user)
+        observer = User.objects.get(username=request.POST['username'])
+        print(observed_by, observer)
+        Observer.objects.filter(observer=observer, observed_by=observed_by).first().delete()
+    return redirect('profile_page')

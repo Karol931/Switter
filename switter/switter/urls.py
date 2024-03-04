@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('main_page.urls')),
     path('post/', include('posts.urls')),
     path('observers/', include('observers.urls')),
+    path('profile/', include('user_profile.urls'))
 ]

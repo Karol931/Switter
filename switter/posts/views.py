@@ -30,3 +30,10 @@ def check_post_sentiment(post_text):
         ]
     )
     return response.choices[0].message.content
+
+
+def delete_post(request):
+    if request.method == "POST":
+        post_id = request.POST['post-id']
+        Post.objects.get(id=post_id).delete()
+    return redirect('profile_page')

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'main_page',
     'posts',
     'observers',
+    'user_profile',
 ]
 
 MIDDLEWARE = [

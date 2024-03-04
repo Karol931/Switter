@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switter</title>
+    <link rel="stylesheet" href="{% static 'profile_page.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar left">
+            <a href="{% url 'main_page' %}" class="nav-btn">Home</a>
+            <a href="{% url 'profile_page' %}" class="nav-btn">Profile</a>
+            <a href="" class="nav-btn">Search</a>
+            <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
+        </aside>
+
+        <main class="main-content">
+            <h1 class="profile-username">{{user.username}}</h1>
+            <h2 class="profile-name">{{user.first_name}} {{user.last_name}}</h2>
+            <!-- {% if messages %}
+                {% for message in messages %}
+                <div class="{{message.tags}}">{{message}}</div>
+                {% endfor%}
+                {% endif %} -->
+            {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <div>
+                        <h3 class="username">{{ post.user }}</h3>
+                        <p class="date">{{ post.date_time }}</p>
+                    </div>
+                    <form action="{% url 'delete_post' %}" method="post">
+                        {% csrf_token %}
+                        <button class="delete-button">Delete</button>
+                        <input type="hidden" name="post-id" value="{{post.id}}">
+                    </form>
+                </div>
+                <p class="post-text">{{ post.post }}</p>
+            </div>
+            {% endfor %}
+        </main>
+
+        <aside class="sidebar right">
+            <h2 style="margin-bottom: 20px;">Observing: </h2>
+            {% for observer in observers %}
+            <div class="user-profile">
+                <div class="user-data">
+                    <b class="username">{{ observer.username }}</b>
+                    <p class="name">{{ observer.first_name }} {{ observer.last_name }}</p>
+                </div>
+                <form action="{% url 'delete_observer' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{observer}}" />
+                    <button type="submit" class="delete-observer">-</button>
+                </form>
+
+            </div>
+
+            {% endfor%}
+        </aside>
+    </div>
+</body>
+
+</html>

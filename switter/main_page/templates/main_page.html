@@ -12,8 +12,8 @@
 <body>
     <div class="container">
         <aside class="sidebar left">
-            <a href="" class="nav-btn">Home</a>
-            <a href="" class="nav-btn">Profile</a>
+            <a href="{% url 'main_page' %}" class="nav-btn">Home</a>
+            <a href="{% url 'profile_page' %}" class="nav-btn">Profile</a>
             <a href="" class="nav-btn">Search</a>
             <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
         </aside>
@@ -22,7 +22,7 @@
             <h2 class="welcome-text">Welcome {{user.username}}</h2>
             <form method="post" action="{% url 'add_post' %}" class="new-post-form">
                 {% csrf_token %}
-                <textarea name="new-post" placeholder="What's happening?"></textarea>
+                <textarea name="new-post" placeholder="What's happening?" required></textarea>
                 <button type="submit" class="tweet-btn">Tweet</button>
                 {% if messages %}
                 {% for message in messages %}
