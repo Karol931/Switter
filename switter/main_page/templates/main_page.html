@@ -11,7 +11,7 @@
 
 <body>
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar left">
             <a href="" class="nav-btn">Home</a>
             <a href="" class="nav-btn">Profile</a>
             <a href="" class="nav-btn">Search</a>
@@ -23,7 +23,12 @@
             <form method="post" action="{% url 'add_post' %}" class="new-post-form">
                 {% csrf_token %}
                 <textarea name="new-post" placeholder="What's happening?"></textarea>
-                <button type="submit">Tweet</button>
+                <button type="submit" class="tweet-btn">Tweet</button>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="{{message.tags}}">{{message}}</div>
+                {% endfor%}
+                {% endif %}
             </form>
             {% for post in posts %}
             <div class="post">
@@ -33,6 +38,10 @@
             </div>
             {% endfor %}
         </main>
+
+        <aside class="sidebar right">
+            <p>asdasd</p>
+        </aside>
     </div>
 </body>
 

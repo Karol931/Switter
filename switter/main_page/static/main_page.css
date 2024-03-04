@@ -14,6 +14,14 @@
     padding: 20px;
 }
 
+.right {
+    border-left: #b9bcbe 1px solid;
+}
+
+.left {
+    border-right: #b9bcbe 1px solid;
+}
+
 .nav-btn {
     display: block;
     width: 100%;
@@ -62,6 +70,11 @@
     margin-bottom: 20px;
 }
 
+.tweet-btn {
+    display: inline-block;
+    margin-right: 20px;
+}
+
 .new-post-form button:hover,
 .nav-btn:hover {
     background-color: #ff5757;
@@ -82,4 +95,23 @@
 
 .post-text {
     margin-top: 20px;
+}
+
+.success,
+.error {
+    display: inline-block;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.error {
+    background-color: #f2dede;
+    color: #a94442;
 }
