@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from .models import Post
+from django.shortcuts import redirect
+from .models import Post, Like
 from datetime import datetime
-from openai import OpenAI
-from django.conf import settings
 from django.contrib import messages
+from .utils import check_post_sentiment
 # Create your views here.
 
 def add_post(request):
@@ -18,22 +17,26 @@ def add_post(request):
             else:
                 messages.error(request, 'Tweet didn\'t match our standards.')
         return redirect('main_page')
-    
-def check_post_sentiment(post_text):
-    API_KEY = setattr(settings, 'OPENAI_API_KEY', None)
-    client = OpenAI(api_key=API_KEY)
-    response = client.chat.completions.create(
-        model='gpt-3.5-turbo',
-        messages=[
-            {'role': 'system', 'content': 'You are a person who makes sentiment analysis of text, anwser with one of the folowing words: positive, neutral, negative.'},
-            {'role': 'user', 'content': post_text}
-        ]
-    )
-    return response.choices[0].message.content
-
+   
 
 def delete_post(request):
     if request.method == "POST":
         post_id = request.POST['post-id']
         Post.objects.get(id=post_id).delete()
     return redirect('profile_page')
+
+def add_like(request):
+    if request.method == "POST":
+        user = request.user
+        post_id = request.POST['post-id']
+        post = Post.objects.get(id=post_id)
+        Like.objects.create(user=user, post=post)
+    return redirect('main_page')
+
+def delete_like(request):
+    if request.method == "POST":
+        user = request.user
+        post_id = request.POST['post-id']
+        post = Post.objects.get(id=post_id)
+        Like.objects.get(post=post, user=user).delete()
+    return redirect('main_page')

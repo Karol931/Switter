@@ -48,6 +48,19 @@
     margin-bottom: 20px;
 }
 
+ion-icon.active {
+    animation: like 0.5s 1;
+    fill: red;
+    stroke: none;
+}
+
+ion-icon {
+    fill: transparent;
+    stroke: black;
+    stroke-width: 30;
+    transition: all 0.5s;
+}
+
 .new-post-form {
     margin-top: 20px;
 }
@@ -61,7 +74,7 @@
     resize: none;
 }
 
-.new-post-form button {
+.new-post-form .tweet-btn {
     padding: 10px 15px;
     background-color: #ff8585;
     color: white;
@@ -86,17 +99,20 @@
     margin-bottom: 10px;
 }
 
-.post .username {
+.post .username,
+.add-like {
     display: inline;
     margin-right: 20px;
 }
 
-.date {
+.date,
+.like-number {
     display: inline;
 }
 
 .post-text {
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .success,
@@ -140,4 +156,25 @@
     border-radius: 100%;
     cursor: pointer;
     font-size: xx-large;
+}
+
+.heart-btn {
+    border: none;
+    cursor: pointer;
+    font-size: large;
+    text-decoration: none;
+    background-color: none;
+    margin-right: 10px;
+    display: inline;
+}
+
+.like-number {
+    display: inline;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+}
+
+.hearth {
+    color: #ff8585;
 }
