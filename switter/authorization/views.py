@@ -45,5 +45,7 @@ def register_user(request):
     
 def logout_user(request):
     if request.method == 'GET':
+        del request.session['sort_method']
+        del request.session['current_page']
         logout(request)
         return redirect('login')

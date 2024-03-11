@@ -178,3 +178,42 @@ ion-icon {
 .hearth {
     color: #ff8585;
 }
+
+.new-post-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.tweet-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.sort-btn {
+    display: inline;
+    margin-left: 10px;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.sort-btn:hover {
+    background-color: rgb(183, 182, 182);
+}
+
+.clicked-sort-btn {
+    background-color: rgb(183, 182, 182);
+}

@@ -1,7 +1,9 @@
 from .models import Post, Like
 from django.contrib.auth.models import User
+from django.db.models import Value, IntegerField, Count
 from openai import OpenAI
 from django.conf import settings
+from django.db import connection
 
 def check_post_sentiment(post_text):
     API_KEY = setattr(settings, 'OPENAI_API_KEY', None)
@@ -22,34 +24,48 @@ def get_logged_in_user_posts(logged_in_user):
 
     return posts
 
-def get_main_page_posts(logged_in_user):
-    posts = Post.objects.exclude(user=logged_in_user).order_by('-date_time')
-    user = User.objects.get(id=logged_in_user.id)
-    print(user.id)
-    like_numbers = [get_like_number(post) for post in posts]
+def get_main_page_posts(logged_in_user, sort_method = 'newest'):
+    order_method = get_order_method(sort_method)
+
+    with connection.cursor() as cursor:
+        query = f""" SELECT p.*, COUNT(l.id) AS like_count, l.user_id
+                    FROM posts_Post AS p LEFT JOIN posts_Like AS l ON p.id = l.post_id
+                    WHERE p.user_id != {logged_in_user.id}
+                        GROUP BY p.id
+                        ORDER BY {order_method} DESC;"""
+        cursor.execute(query)
+        tuple_posts = cursor.fetchall()
     
-    is_post_liked_by_user_list = are_posts_liked_by_user(posts, logged_in_user)
-    
-    for post, like_number, is_liked in zip(posts, like_numbers, is_post_liked_by_user_list):
-        post.like_number = like_number
-        post.is_liked = is_liked
+    posts = translate_tuple_to_dict(tuple_posts, logged_in_user)
 
     return posts
 
-def get_like_number(post):
+def get_order_method(sort_method):
+    if sort_method == 'newest':
+        order_method = 'p.date_time'
+    elif sort_method == 'most-popular':
+        order_method = 'like_count'
     
-    return Like.objects.filter(post=post).count()
+    return order_method
 
-def are_posts_liked_by_user(posts, user):
-    is_post_liked_by_user_list = []
-    counter = 0
-    for post in posts:
-        likes = Like.objects.filter(post=post).values('user')
-        for like in likes:
-            if like['user'] == user.id:
-                is_post_liked_by_user_list.append(True)
-        if len(is_post_liked_by_user_list) -1 < counter:
-            is_post_liked_by_user_list.append(False)
-        counter += 1
+def translate_tuple_to_dict(tuple_posts, logged_id_user):
+    posts = [
+        {
+            'post_id' : post[0],
+            'text' : post[1],
+            'date_time' : post[2],
+            'user' : User.objects.get(id=post[3]).username,
+            'like_number': post[4],
+            'is_liked': is_post_liked_by_user(post[0], logged_id_user.id)
+        } 
+        for post in tuple_posts]
     
-    return is_post_liked_by_user_list
+    return posts
+
+def is_post_liked_by_user(post_id, user_id):
+    likes = Like.objects.filter(post=post_id).values('user')
+    for like in likes:
+        if like['user'] == user_id:
+            return True
+    
+    return False
