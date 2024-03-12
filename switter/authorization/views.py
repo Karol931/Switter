@@ -45,7 +45,16 @@ def register_user(request):
     
 def logout_user(request):
     if request.method == 'GET':
-        del request.session['sort_method']
-        del request.session['current_page']
+        if request.session.__contains__('sort_method'):
+            del request.session['sort_method']
+
+        if request.session.__contains__('current_page'):
+            del request.session['current_page']
+
+        if request.session.__contains__('open_observer'):
+            del request.session['open_observer']
+            
+        if request.session.__contains__('open_observed_by'):
+            del request.session['open_observed_by']
         logout(request)
         return redirect('login')

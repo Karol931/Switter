@@ -24,8 +24,8 @@ def delete_post(request):
     if request.method == "POST":
         post_id = request.POST['post-id']
         Post.objects.get(id=post_id).delete()
-    
-        return redirect(request.session['current_page'])
+
+        return redirect(request.session['current_page'], username=request.session['current_profile'])
 
 def add_like(request):
     if request.method == "POST":
@@ -33,8 +33,11 @@ def add_like(request):
         post_id = request.POST['post-id']
         post = Post.objects.get(id=post_id)
         Like.objects.create(user=user, post=post)
-    
-        return redirect(request.session['current_page'])
+        
+        if request.session['current_page'] == 'profile_page':
+            return redirect(request.session['current_page'], username=request.session['current_profile'])
+        else:
+            return redirect(request.session['current_page'])
 
 def delete_like(request):
     if request.method == "POST":
@@ -43,10 +46,16 @@ def delete_like(request):
         post = Post.objects.get(id=post_id)
         Like.objects.get(post=post, user=user).delete()
     
-        return redirect(request.session['current_page'])
+        if request.session['current_page'] == 'profile_page':
+            return redirect(request.session['current_page'], username=request.session['current_profile'])
+        else:
+            return redirect(request.session['current_page'])
 
 def set_sort_method(request):
     if request.method == "POST":
         request.session['sort_method'] = request.POST['sort-method']
     
-        return redirect(request.session['current_page'])
+        if request.session['current_page'] == 'profile_page':
+            return redirect(request.session['current_page'], username=request.session['current_profile'])
+        else:
+            return redirect(request.session['current_page'])

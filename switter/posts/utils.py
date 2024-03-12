@@ -19,12 +19,23 @@ def check_post_sentiment(post_text):
     return response.choices[0].message.content
 
 
-def get_logged_in_user_posts(logged_in_user):
-    posts = Post.objects.filter(user=logged_in_user).order_by('-date_time')
+def get_profile_page_posts(user_of_profile, logged_in_user, sort_method):
+    order_method = get_order_method(sort_method)
+    with connection.cursor() as cursor:
+        query = f""" SELECT p.*, COUNT(l.id) AS like_count, l.user_id
+                    FROM posts_Post AS p LEFT JOIN posts_Like AS l ON p.id = l.post_id
+                    WHERE p.user_id = {user_of_profile.id}
+                        GROUP BY p.id
+                        ORDER BY {order_method} DESC;"""
+        cursor.execute(query)
+        tuple_posts = cursor.fetchall()
+
+        posts = translate_tuple_to_dict(tuple_posts, logged_in_user)
 
     return posts
 
-def get_main_page_posts(logged_in_user, sort_method = 'newest'):
+
+def get_main_page_posts(logged_in_user, sort_method):
     order_method = get_order_method(sort_method)
 
     with connection.cursor() as cursor:
@@ -40,6 +51,16 @@ def get_main_page_posts(logged_in_user, sort_method = 'newest'):
 
     return posts
 
+def check_sort_method(session):
+    if session.__contains__('sort_method'):
+        sort_method = session['sort_method']
+    else:
+        sort_method = 'newest'
+        session['sort_method'] = sort_method
+    
+    return sort_method
+
+
 def get_order_method(sort_method):
     if sort_method == 'newest':
         order_method = 'p.date_time'
@@ -47,6 +68,7 @@ def get_order_method(sort_method):
         order_method = 'like_count'
     
     return order_method
+
 
 def translate_tuple_to_dict(tuple_posts, logged_id_user):
     posts = [
@@ -61,6 +83,7 @@ def translate_tuple_to_dict(tuple_posts, logged_id_user):
         for post in tuple_posts]
     
     return posts
+
 
 def is_post_liked_by_user(post_id, user_id):
     likes = Like.objects.filter(post=post_id).values('user')

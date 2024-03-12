@@ -14,7 +14,7 @@
     <div class="container">
         <aside class="sidebar left">
             <a href="{% url 'main_page' %}" class="nav-btn">Home</a>
-            <a href="{% url 'profile_page' %}" class="nav-btn">Profile</a>
+            <a href="{% url 'profile_page' username=user%}" class="nav-btn">Profile</a>
             <a href="" class="nav-btn">Search</a>
             <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
         </aside>
@@ -58,7 +58,9 @@
             </div>
             {% for post in posts %}
             <div class="post">
-                <h3 class="username">{{post.user}}</h3>
+                <a href="{% url 'profile_page' username=post.user%}">
+                    <h3 class="username">{{post.user}}</h3>
+                </a>
                 <p class="date">{{post.date_time}}</p>
                 <p class="post-text">{{post.text}}</p>
                 {% if post.is_liked %}
@@ -79,7 +81,6 @@
                 </form>
                 {% endif %}
                 <p class="like-number">{{post.like_number}}</p>
-
             </div>
             {% endfor %}
         </main>
@@ -88,7 +89,9 @@
             {% for p in people_to_observe %}
             <div class="user-profile">
                 <div class="user-data">
-                    <b class="username">{{ p.username }}</b>
+                    <a href="{% url 'profile_page' username=p.username%}">
+                        <b class="username">{{ p.username}}</b>
+                    </a>
                     <p class="name">{{ p.first_name }} {{ p.last_name }}</p>
                 </div>
                 <form action="{% url 'add_observer' %}" method="post">

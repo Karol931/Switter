@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 .container {
     display: flex;
 }
@@ -37,14 +38,40 @@
 }
 
 .main-content {
+    /* position: fixed; */
     flex: 1;
     padding: 20px;
+    /* z-index: 0; */
 }
 
 .nav-btn:hover,
 .delete-observer:hover,
-.delete-button:hover {
+.delete-button:hover,
+.add-observer:hover {
     background-color: #ff5757;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.observers,
+.observed-by {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.observed-by p,
+.observers p {
+    font-size: medium;
+}
+
+.profile-data-container {
+    margin-right: 50px;
 }
 
 .profile-username {
@@ -81,6 +108,7 @@
 
 .post-text {
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .delete-button {
@@ -126,6 +154,89 @@
 }
 
 .delete-observer {
+    height: 40px;
+    width: 40px;
+    background-color: #ff8585;
+    color: white;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+    font-size: xx-large;
+}
+
+.heart-btn {
+    border: none;
+    cursor: pointer;
+    font-size: large;
+    text-decoration: none;
+    background-color: none;
+    margin-right: 10px;
+    display: inline;
+}
+
+.like-number {
+    display: inline;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+}
+
+.hearth {
+    color: #ff8585;
+}
+
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.sort-btn {
+    display: inline;
+    margin-left: 10px;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.sort-btn:hover {
+    background-color: rgb(183, 182, 182);
+}
+
+.clicked-sort-btn {
+    background-color: rgb(183, 182, 182);
+}
+
+.observers-pop-up {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 100;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.observers-pop-up-header {
+    border-bottom: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-observer {
     height: 40px;
     width: 40px;
     background-color: #ff8585;
