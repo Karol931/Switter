@@ -1,0 +1,38 @@
+{% for post in posts %}
+<div class="post">
+    <div class="post-header">
+        <div>
+            <a href="{% url 'profile_page' username=post.user%}">
+                <h3 class="username">{{post.user}}</h3>
+            </a>
+            <p class="date">{{post.date_time}}</p>
+        </div>
+        {% if logged_in_user == user_of_profile %}
+        <form action="{% url 'delete_post' %}" method="post">
+            {% csrf_token %}
+            <button class="delete-button">Delete</button>
+            <input type="hidden" name="post-id" value="{{post.post_id}}">
+        </form>
+        {% endif %}
+    </div>
+    <p class="post-text">{{post.text}}</p>
+    {% if post.is_liked %}
+    <form action="{% url 'delete_like' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="heart-btn">
+            <i class="fa fa-heart hearth"></i>
+        </button>
+        <input type="hidden" name="post-id" value="{{post.post_id}}">
+    </form>
+    {% else %}
+    <form action="{% url 'add_like' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button class="heart-btn">
+            <i class="fa-regular fa-heart hearth"></i>
+        </button>
+        <input type="hidden" name="post-id" value="{{post.post_id}}">
+    </form>
+    {% endif %}
+    <p class="like-number">{{post.like_number}}</p>
+</div>
+{% endfor %}

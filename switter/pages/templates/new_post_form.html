@@ -1,0 +1,14 @@
+<form method="post" action="{% url 'add_post' %}" class="new-post-form">
+    {% csrf_token %}
+    <textarea name="new-post" placeholder="What's happening?" required></textarea>
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <button type="submit" class="tweet-btn">Tweet</button>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="{{message.tags}}">{{message}}</div>
+            {% endfor%}
+            {% endif %}
+        </div>
+    </div>
+</form>

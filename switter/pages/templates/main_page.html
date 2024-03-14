@@ -1,0 +1,19 @@
+{% extends './base.html' %}
+{% block content %}
+{% include './menu_sidebar.html' %}
+
+<main class="main-content">
+    <h2 class="welcome-text">Welcome {{user.username}}</h2>
+    {% include './new_post_form.html' %}
+
+    {% include './sort_container.html' %}
+
+    {% include './home_posts.html' %}
+</main>
+
+{% include './users_sidebar.html' %}
+{% endblock %}
+<!-- </div>
+</body>
+
+</html> -->

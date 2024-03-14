@@ -1,0 +1,20 @@
+<div class="sort-container">
+    <form action="{% url 'set_sort_method' %}" method="post">
+        {% csrf_token %}
+        {% if sort_method == "newest" %}
+        <button type="submit" class="clicked-sort-btn sort-btn">Newest</button>
+        {% else %}
+        <button type="submit" class="sort-btn">Newest</button>
+        {% endif %}
+        <input type="hidden" name="sort-method" value="newest">
+    </form>
+    <form action="{% url 'set_sort_method' %}" method="post">
+        {% csrf_token %}
+        {% if sort_method == "most-popular" %}
+        <button type="submit" class="clicked-sort-btn sort-btn">Most popular</button>
+        {% else %}
+        <button type="submit" class="sort-btn">Most popular</button>
+        {% endif %}
+        <input type="hidden" name="sort-method" value="most-popular">
+    </form>
+</div>

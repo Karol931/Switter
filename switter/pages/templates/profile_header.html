@@ -1,0 +1,14 @@
+<div class="profile-header">
+    <div class="profile-data-container">
+        <h1 class="profile-username">{{user_of_profile.username}}</h1>
+        <h2 class="profile-name">{{user_of_profile.first_name}} {{user_of_profile.last_name}}</h2>
+    </div>
+    <a href="{% url 'open_observe' %}" class="observers">
+        <p>Observing:</p>
+        <p>{{observer_count}}</p>
+    </a>
+    <a href="{% url 'open_observed_by' %}" class="observed-by">
+        <p>Observed_by:</p>
+        <p>{{observed_by_count}}</p>
+    </a>
+</div>
