@@ -1,10 +1,10 @@
 {% if opened_sub_window %}
 <div class="observers-pop-up">
     <div class="observers-pop-up-header">
-        {% if opened_sub_window == 'open_observer' %}
+        {% if opened_sub_window == 'observers' %}
         <h2 style="margin-bottom: 20px;">Observing:</h2>
         <a href="{%url 'close_observe' %}">x</a>
-        {% elif opened_sub_window == 'open_observed_by' %}
+        {% elif opened_sub_window == 'observed_by' %}
         <h2 style="margin-bottom: 20px;">Observed_by:</h2>
         <a href="{%url 'close_observed_by' %}">x</a>
         {% endif %}

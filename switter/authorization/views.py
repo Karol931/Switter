@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-
+from pages.models import PageState
 # Create your views here.
 
 def login_user(request):
@@ -16,6 +15,7 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            PageState.objects.create(user=user)
             login(request, user)
             return redirect('main_page')
         else:
@@ -32,11 +32,12 @@ def register_user(request):
         email = request.POST['email']
         password = request.POST['password']
         password_confirmation = request.POST['password_confirmation']
+
         if password != password_confirmation:
             messages.error(request, 'Passwords don\'t match.')
             return render(request, 'register.html')
         try:
-            user = User.objects.create_user(username=username, email=email, password=password, first_name=fname, last_name=lname)
+            User.objects.create_user(username=username, email=email, password=password, first_name=fname, last_name=lname)
         except:
             messages.error(request, 'Username already taken.')
             return render(request, 'register.html')
@@ -45,16 +46,6 @@ def register_user(request):
     
 def logout_user(request):
     if request.method == 'GET':
-        if request.session.__contains__('sort_method'):
-            del request.session['sort_method']
-
-        if request.session.__contains__('current_page'):
-            del request.session['current_page']
-
-        if request.session.__contains__('open_observer'):
-            del request.session['open_observer']
-            
-        if request.session.__contains__('open_observed_by'):
-            del request.session['open_observed_by']
+        PageState.objects.get(user=request.user).delete()
         logout(request)
         return redirect('login')

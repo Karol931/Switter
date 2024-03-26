@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from .models import Observer
+from pages.models import PageState
+from pages.utils import get_redirect_page
 # Create your views here.
 
 def add_observer(request):
@@ -8,10 +10,8 @@ def add_observer(request):
         observer = User.objects.get(username=request.POST['username']) 
         observed_by = User.objects.get(username=request.user)
         Observer.objects.create(observer=observer, observed_by=observed_by)
-    
-    if request.session['current_page'] == 'main_page':
-        return redirect(request.session['current_page'])
-    return redirect(request.session['current_page'], username=request.session['current_profile'])
+
+        return get_redirect_page(request.user)
 
 def delete_observer(request):
     if request.method == "POST":
@@ -20,38 +20,29 @@ def delete_observer(request):
         print(observed_by, observer)
         Observer.objects.filter(observer=observer, observed_by=observed_by).first().delete()
     
-    if request.session['current_page'] == 'main_page':
-        return redirect(request.session['current_page'])
-    return redirect(request.session['current_page'], username=request.session['current_profile'])
+        return get_redirect_page(request.user)
 
 def open_observe(request):
     if request.method == "GET":
-        request.session['open_observer'] = True
-        
-        if request.session['current_page'] == 'main_page':
-            return redirect(request.session['current_page'])
-        return redirect(request.session['current_page'], username=request.session['current_profile'])
+        PageState.objects.filter(user=request.user).update(sub_window='observers') 
+
+        return get_redirect_page(request.user)
 
 def close_observe(request):
     if request.method == "GET":
-        del request.session['open_observer']
-
-        if request.session['current_page'] == 'main_page':
-            return redirect(request.session['current_page'])
-        return redirect(request.session['current_page'], username=request.session['current_profile'])
+        PageState.objects.filter(user=request.user).update(sub_window=None) 
+        
+        return get_redirect_page(request.user)
 
 def open_observed_by(request):
     if request.method == "GET":
-        request.session['open_observed_by'] = True
+    
+        PageState.objects.filter(user=request.user).update(sub_window='observed_by')
 
-        if request.session['current_page'] == 'main_page':
-            return redirect(request.session['current_page'])
-        return redirect(request.session['current_page'], username=request.session['current_profile'])
+        return get_redirect_page(request.user)
 
 def close_observed_by(request):
     if request.method == "GET":
-        del request.session['open_observed_by']
+        PageState.objects.filter(user=request.user).update(sub_window=None)
         
-        if request.session['current_page'] == 'main_page':
-            return redirect(request.session['current_page'])
-        return redirect(request.session['current_page'], username=request.session['current_profile'])
+        return get_redirect_page(request.user)

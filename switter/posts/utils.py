@@ -1,6 +1,6 @@
-from .models import Post, Like
+from .models import Like
 from django.contrib.auth.models import User
-from django.db.models import Value, IntegerField, Count
+from pages.models import PageState
 from openai import OpenAI
 from django.conf import settings
 from django.db import connection
@@ -51,12 +51,8 @@ def get_main_page_posts(logged_in_user, sort_method):
 
     return posts
 
-def check_sort_method(session):
-    if session.__contains__('sort_method'):
-        sort_method = session['sort_method']
-    else:
-        sort_method = 'newest'
-        session['sort_method'] = sort_method
+def check_sort_method(user):
+    sort_method = PageState.objects.get(user=user).sort_method
     
     return sort_method
 
