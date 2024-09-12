@@ -15,9 +15,12 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            if PageState.objects.get(user=user.id) is not None:
+                PageState.objects.get(user=user.id).delete()
             PageState.objects.create(user=user)
             login(request, user)
             return redirect('main_page')
+
         else:
             messages.error(request, 'User with those credentials doesn\'t exist.')
             return render(request, 'login.html')

@@ -227,7 +227,8 @@
     margin-bottom: 10px;
 }
 
-.sort-btn {
+.sort-btn,
+.search-result-selection-btn {
     display: inline;
     margin-left: 10px;
     border: none;
@@ -236,11 +237,13 @@
     background-color: #fff;
 }
 
-.sort-btn:hover {
+.sort-btn:hover,
+.search-result-selection-btn:hover {
     background-color: rgb(183, 182, 182);
 }
 
-.clicked-sort-btn {
+.clicked-sort-btn,
+.clicked-search-result-selection-btn {
     background-color: rgb(183, 182, 182);
 }
 
@@ -270,4 +273,19 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+/* .search-results-container {
+    display: flex;
+    flex-direction: row;
+    gap: 50%;
+} */
+
+.search-result-selection-container {
+    display: flex;
+    font-size: large;
+    flex-direction: row;
+    gap: 50%;
+    height: 30px;
+    border-bottom: solid 1px #ccc;
 }

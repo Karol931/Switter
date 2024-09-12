@@ -10,6 +10,8 @@ def get_redirect_page(user):
         return redirect('main_page')
     elif page_state.page == 'profile_page':
         return redirect('profile_page', username=page_state.profile)
+    # elif page_state.page == 'search_page':
+    #     return redirect('search_page')
     
 
 def is_same_profile(username, logged_in_user):

@@ -23,5 +23,5 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('post/', include('posts.urls')),
     path('observers/', include('observers.urls')),
-    # path('profile/', include('user_profile.urls'))
+    path('search/', include('search.urls'))
 ]

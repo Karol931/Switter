@@ -8,3 +8,5 @@ class PageState(models.Model):
     profile = models.CharField(max_length=255, default=None, null=True)
     sub_window = models.CharField(max_length=255, default=None, null=True)
     sort_method = models.CharField(max_length=255, default='newest')
+    search_phrase = models.CharField(max_length=255, default=None, null=True)
+    search_type = models.CharField(max_length=255, default=None, null=True)

@@ -1,0 +1,9 @@
+<form method="post" action="{% url 'search_page' %}" class="new-post-form">
+    {% csrf_token %}
+    <textarea name="search" required>{% if search_phrase%}{{ search_phrase }}{% endif %}</textarea>
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <button type="submit" class="tweet-btn">Search</button>
+        </div>
+    </div>
+</form>
