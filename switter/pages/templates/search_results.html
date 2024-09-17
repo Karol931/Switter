@@ -1,11 +1,21 @@
 <div class="search-results-container">
-    <div class="search-result-selection-container">
-        <div class="search-result-selection-btn"><a href="">Users</a>
-        </div>
-        <div class="search-result-selection-btn"><a href="">Posts</a>
-        </div>
-    </div>
     {% if search_phrase %}
+    <div class="search-result-selection-container">
+        {% if users %}
+        <div class="clicked-search-result-selection-btn"><a href="{% url 'search_user' %}">Users</a>
+        </div>
+        {% else %}
+        <div class="search-result-selection-btn"><a href="{% url 'search_user' %}">Users</a>
+        </div>
+        {% endif %}
+        {% if posts %}
+        <div class="clicked-search-result-selection-btn"><a href="{% url 'search_post' %}">Posts</a>
+        </div>
+        {% else %}
+        <div class="search-result-selection-btn"><a href="{% url 'search_post' %}">Posts</a>
+        </div>
+        {% endif %}
+    </div>
     <div class="search-results">
         {% if posts %}
         {%for post in posts %}
@@ -40,23 +50,23 @@
         {% for user in users %}
         <div class="user-profile">
             <div class="user-data">
-                <a href="{% url 'profile_page' username=observer.username %}">
-                    <b class="username">{{observer.username }}</b>
+                <a href="{% url 'profile_page' username=user.username %}">
+                    <b class="username">{{user.username }}</b>
                 </a>
-                <p class="name">{{ observer.first_name }} {{ observer.last_name }}</p>
+                <p class="name">{{ user.first_name }} {{ user.last_name }}</p>
             </div>
-            {% if observer.username == logged_in_user.username %}
+            {% if user.username == logged_in_user.username %}
             <div></div>
-            {% elif observer.is_observed_by_logged_in_user == True %}
+            {% elif user.is_observed_by == True %}
             <form action="{% url 'delete_observer' %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="username" value="{{observer}}" />
+                <input type="hidden" name="username" value="{{user}}" />
                 <button type="submit" class="delete-observer">-</button>
             </form>
-            {% elif observer.is_observed_by_logged_in_user == False %}
+            {% elif user.is_observed_by == False %}
             <form action="{% url 'add_observer' %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="username" value="{{observer}}" />
+                <input type="hidden" name="username" value="{{user}}" />
                 <button type="submit" class="add-observer">+</button>
             </form>
             {% endif %}

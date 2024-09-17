@@ -1,3 +1,4 @@
 django-admin
 environ
 openai
+psycopg2

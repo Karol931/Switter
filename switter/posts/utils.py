@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from pages.models import PageState
 from openai import OpenAI
 from django.conf import settings
-from django.db import connection
 from posts.models import Post
 from django.db.models import Count, F
 
@@ -22,44 +21,44 @@ def check_post_sentiment(post_text):
     return response.choices[0].message.content
 
 
-def get_profile_page_posts(user_of_profile, logged_in_user, sort_method):
-    order_method = get_order_method(sort_method)
-    with connection.cursor() as cursor:
-        query = f""" SELECT p.*, COUNT(l.id) AS like_count, l.user_id
-                    FROM posts_Post AS p LEFT JOIN posts_Like AS l ON p.id = l.post_id
-                    WHERE p.user_id = {user_of_profile.id}
-                        GROUP BY p.id
-                        ORDER BY {order_method} DESC;"""
-        cursor.execute(query)
-        tuple_posts = cursor.fetchall()
+def get_profile_page_posts(user_of_profile, logged_in_user):
 
-        posts = translate_tuple_to_dict(tuple_posts, logged_in_user)
+    posts = Post.objects.filter(user=user_of_profile).values()
+    
+    posts = [
+        {
+            'post_id' : post['id'],
+            'text' : post['post'],
+            'date_time' : post['date_time'],
+            'user' : User.objects.get(id=post['user_id']).username,
+            'like_number': get_post_likes(post),
+            'is_liked': is_post_liked_by_user(post['id'], logged_in_user.id)
+        } 
+        for post in posts]
+    
+    posts = sort_posts(logged_in_user, posts)
 
     return posts
 
+def get_main_page_posts(logged_in_user):
 
-def get_main_page_posts(logged_in_user, sort_method):
-    order_method = get_order_method(sort_method)
-
-    posts = (Post.objects.exclude(user=logged_in_user).annotate(like_count=Count('user_id')).order_by(F(order_method).desc()))
-
-    print(posts.values())
-
-    with connection.cursor() as cursor:
-        query = f""" SELECT p.*, COUNT(l.id) AS like_count, l.user_id
-                    FROM posts_Post AS p LEFT JOIN posts_Like AS l ON p.id = l.post_id
-                    WHERE p.user_id != {logged_in_user.id}
-                        GROUP BY p.id
-                        ORDER BY {order_method} DESC;"""
-        cursor.execute(query)
-        tuple_posts = cursor.fetchall()
-
+    posts = Post.objects.exclude(user=logged_in_user).values()
     
-    # print (tuple_posts, posts)
+    posts = [
+        {
+            'post_id' : post['id'],
+            'text' : post['post'],
+            'date_time' : post['date_time'],
+            'user' : User.objects.get(id=post['user_id']).username,
+            'like_number': get_post_likes(post),
+            'is_liked': is_post_liked_by_user(post['id'], logged_in_user.id)
+        } 
+        for post in posts]
     
-    posts = translate_tuple_to_dict(posts.values(), logged_in_user)
+    posts = sort_posts(logged_in_user, posts)
 
     return posts
+
 
 def check_sort_method(user):
     sort_method = PageState.objects.get(user=user).sort_method
@@ -67,28 +66,20 @@ def check_sort_method(user):
     return sort_method
 
 
-def get_order_method(sort_method):
+def sort_posts(user, posts):
+    sort_method = check_sort_method(user)
     if sort_method == 'newest':
         order_method = 'date_time'
     elif sort_method == 'most-popular':
-        order_method = 'like_count'
-    
-    return order_method
-
-
-def translate_tuple_to_dict(tuple_posts, logged_id_user):
-    posts = [
-        {
-            'post_id' : post['id'],
-            'text' : post['post'],
-            'date_time' : post['date_time'],
-            'user' : User.objects.get(id=post['user_id']).username,
-            'like_number': post['like_count'],
-            'is_liked': is_post_liked_by_user(post['id'], logged_id_user.id)
-        } 
-        for post in tuple_posts]
-    
+        order_method = 'like_number'
+    posts = sorted(posts, key=lambda x:x[order_method], reverse=True if order_method=='like_number' else False)
     return posts
+
+
+def get_post_likes(post):
+    like_number = Like.objects.filter(post=post['id']).count()
+
+    return like_number
 
 
 def is_post_liked_by_user(post_id, user_id):

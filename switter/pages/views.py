@@ -16,7 +16,7 @@ def main_page(request):
             
             sort_method = check_sort_method(user)
 
-            posts = get_main_page_posts(user, sort_method)
+            posts = get_main_page_posts(user)
             people_to_observe = get_users_to_observe(user)
         
             return render(request, 'main_page.html', {'user' : user, 'posts': posts, 'people_to_observe': people_to_observe, 'sort_method': sort_method})
@@ -43,7 +43,7 @@ def profile_page(request, username):
             observer_or_observed_by = load_sub_window_data(page_state.sub_window, user_of_profile, logged_in_user)
             
             sort_method = check_sort_method(logged_in_user)
-            posts = get_profile_page_posts(user_of_profile, logged_in_user, sort_method)
+            posts = get_profile_page_posts(user_of_profile, logged_in_user)
 
             return render(request, 'profile_page.html', {'logged_in_user': logged_in_user, 'posts': posts, 'sort_method': sort_method, 'user_of_profile': user_of_profile, 'opened_sub_window': page_state.sub_window, 'observer_or_observed_by': observer_or_observed_by, 'observed_by_count': observed_by_count, 'observer_count': observer_count})
         

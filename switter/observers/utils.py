@@ -40,3 +40,11 @@ def get_observers_of_user(logged_in_user, user):
     
     print(observres_of_user.values())
     return observres_of_user
+
+def is_observed_by_check(logged_in_user, user):
+    # print(user)
+    is_observed_by = Observer.objects.filter(observed_by = logged_in_user.id, observer = user['id'])
+    
+    if is_observed_by:
+        return True    
+    return False
