@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'rest_framework',
     'authorization',
     'posts',
     'observers',
     'pages',
     'search',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +139,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
+
