@@ -59,7 +59,7 @@ def delete_post(request):
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
     type=openapi.TYPE_OBJECT, 
     properties={
-        'post-id': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
+        'post-id': openapi.Schema(type=openapi.TYPE_INTEGER, description='int'),
     }
 )
 ,responses={200: '', 401: 'Unauthorized'})
@@ -80,7 +80,7 @@ def add_like(request):
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
     type=openapi.TYPE_OBJECT, 
     properties={
-        'post-id': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
+        'post-id': openapi.Schema(type=openapi.TYPE_INTEGER, description='int'),
     }
 )
 ,responses={200: '', 401: 'Unauthorized'})

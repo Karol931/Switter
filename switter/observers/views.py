@@ -44,7 +44,6 @@ def delete_observer(request):
         username = request.data.get('username')
         observed_by = User.objects.get(username=request.user)
         observer = User.objects.get(username=username)
-        print(observed_by, observer)
         Observer.objects.filter(observer=observer, observed_by=observed_by).first().delete()
 
         return get_redirect_page(request.user)
