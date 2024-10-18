@@ -2,3 +2,5 @@ django-admin
 environ
 openai
 psycopg2
+drf_yasg
+djangorestframework
