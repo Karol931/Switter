@@ -128,4 +128,8 @@ python manage.py runserver
 
 Open your browser and navigate to `http://127.0.0.1:8000/` to view the application.
 
+# Usage
+
+API documentation is avalible at `http://127.0.0.1:8000/swagger`.
+
 
