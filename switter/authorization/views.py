@@ -6,6 +6,7 @@ from pages.models import PageState
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 # Create your views here.
 
 
@@ -19,7 +20,7 @@ from drf_yasg import openapi
 ,responses={200: '', 400: 'User with those credentials doesn\'t exist.'})
 @swagger_auto_schema(method='get' ,responses={200: ''})
 @api_view(['GET', 'POST'])
-def login_user(request):
+def login_user(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.method == 'GET':
         if request.user.is_authenticated:
             return redirect('main_page')
@@ -57,7 +58,7 @@ def login_user(request):
 ,responses={200: '', 400: 'Passwords don\'t match.', 400: 'Username already taken.'})
 @swagger_auto_schema(method='get' ,responses={200: ''})
 @api_view(['GET', 'POST'])
-def register_user(request):
+def register_user(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
        return render(request, 'register.html')
     elif request.method == 'POST':
@@ -85,7 +86,7 @@ def register_user(request):
 
 @swagger_auto_schema(method='get' ,responses={200: ''})
 @api_view(['GET'])
-def logout_user(request):
+def logout_user(request: HttpRequest) -> HttpResponseRedirect:
     if request.user.is_authenticated:
         PageState.objects.get(user=request.user).delete()
         logout(request)

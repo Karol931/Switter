@@ -24,7 +24,7 @@
                 <h3 class="username">{{post.user}}</h3>
             </a>
             <p class="date">{{post.date_time}}</p>
-            <p class="post-text">{{post.text}}</p>
+            <p class="post-text">{{post.post}}</p>
             {% if post.is_liked %}
             <form action="{% url 'delete_like' %}" method="post" style="display: inline;">
                 {% csrf_token %}

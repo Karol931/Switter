@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.response import Response
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 # Create your views here.
 
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
@@ -19,9 +20,10 @@ from rest_framework.response import Response
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def add_post(request):
+def add_post(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.user.is_authenticated:
         new_post = request.data.get('new-post')
+        
         if check_post_sentiment(new_post) == 'positive':
             user = request.user
             date_time = datetime.now()
@@ -30,6 +32,11 @@ def add_post(request):
         else:
             messages.error(request, 'Tweet didn\'t match our standards.')
         
+        # user = request.user
+        # date_time = datetime.now()
+        # Post.objects.create(user=user, post=new_post, date_time=date_time)
+        # messages.success(request, 'Tweet added succesfully.')
+    
         return get_redirect_page(request.user)
 
     return Response('Unauthorized',status=401)
@@ -44,7 +51,7 @@ def add_post(request):
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def delete_post(request):
+def delete_post(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.user.is_authenticated:
         post_id = request.data.get('post-id')
         print(post_id)
@@ -64,7 +71,7 @@ def delete_post(request):
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def add_like(request):
+def add_like(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.user.is_authenticated:
         user = request.user
         post_id = request.data.get('post-id')
@@ -85,7 +92,7 @@ def add_like(request):
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def delete_like(request):
+def delete_like(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.user.is_authenticated:
         user = request.user
         post_id = request.data.get('post-id')
@@ -106,7 +113,7 @@ def delete_like(request):
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def set_sort_method(request):
+def set_sort_method(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.user.is_authenticated:
         page_state = PageState.objects.filter(user=request.user)        
         sort_method = request.data.get('sort-method')

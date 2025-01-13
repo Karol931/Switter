@@ -9,11 +9,12 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.response import Response
+from django.http import HttpRequest, HttpResponse
 # Create your views here.
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def main_page(request):
+def main_page(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         user = request.user
         PageState.objects.filter(user=user).update(page='main_page', profile=None, sub_window=None, search_phrase=None)
@@ -30,7 +31,7 @@ def main_page(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def profile_page(request, username):
+def profile_page(request: HttpRequest, username: str)  -> HttpResponse:
     if request.user.is_authenticated:
         logged_in_user = request.user
         if is_same_profile(username, logged_in_user):
@@ -63,7 +64,7 @@ def profile_page(request, username):
 ,responses={200: '', 401: 'Unauthorized'})
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET', 'POST'])
-def search_page(request):
+def search_page(request: HttpRequest)  -> HttpResponse:
     if request.method == 'GET':
         if request.user.is_authenticated:
             user = request.user

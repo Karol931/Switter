@@ -8,11 +8,11 @@ from observers.utils import is_observed_by_check
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-
+from django.http import HttpRequest
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def users(request):
+def users(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user.id).update(search_type = 'users')
         search_phrase = PageState.objects.get(user=request.user.id).search_phrase
@@ -29,7 +29,7 @@ def users(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def posts(request):
+def posts(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user.id).update(search_type = 'posts')
         search_phrase = PageState.objects.get(user=request.user.id).search_phrase

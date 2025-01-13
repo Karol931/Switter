@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.response import Response
-
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 # Create your views here.
 
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
@@ -18,7 +18,7 @@ from rest_framework.response import Response
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def add_observer(request):
+def add_observer(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         username = request.data.get('username')
         observer = User.objects.get(username=username)
@@ -39,7 +39,7 @@ def add_observer(request):
 )
 ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['POST'])
-def delete_observer(request):
+def delete_observer(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         username = request.data.get('username')
         observed_by = User.objects.get(username=request.user)
@@ -54,7 +54,7 @@ def delete_observer(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def open_observe(request):
+def open_observe(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user).update(sub_window='observers') 
 
@@ -66,7 +66,7 @@ def open_observe(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def close_observe(request):
+def close_observe(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user).update(sub_window=None) 
         
@@ -78,7 +78,7 @@ def close_observe(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def open_observed_by(request):
+def open_observed_by(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user).update(sub_window='observed_by')
 
@@ -90,7 +90,7 @@ def open_observed_by(request):
 
 @swagger_auto_schema(method='get' ,responses={200: '', 401: 'Unauthorized'})
 @api_view(['GET'])
-def close_observed_by(request):
+def close_observed_by(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if request.user.is_authenticated:
         PageState.objects.filter(user=request.user).update(sub_window=None)
         
